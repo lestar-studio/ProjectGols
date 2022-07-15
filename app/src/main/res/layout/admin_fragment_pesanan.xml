@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.customer.fragment.FragmentPesanan">
+    tools:context=".view.admin.fragment.FragmentPesanan">
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarPesanan"
         android:layout_width="match_parent"
@@ -47,16 +47,6 @@
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:text="DIBATALKAN"
-            android:textColor="@android:color/white"
-            android:textSize="12dp"/>
-
-        <Button
-            android:id="@+id/btnSelesai"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:background="@color/colorPrimary"
-            android:text="SELESAI"
             android:textColor="@android:color/white"
             android:textSize="12dp"/>
     </LinearLayout>

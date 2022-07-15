@@ -6,12 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".view.customer.fragment.FragmentAkun">
+    tools:context=".view.admin.fragment.FragmentLaporan">
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbarAkun"
+        android:id="@+id/toolbarLaporan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
         android:minHeight="?attr/actionBarSize"
-        app:title="Akun" />
+        app:title="Laporan" >
+        <ImageView
+            android:id="@+id/btnLogout"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="end"
+            android:layout_marginHorizontal="15dp"
+            android:src="@drawable/ic_logout"/>
+    </androidx.appcompat.widget.Toolbar>
 </LinearLayout>

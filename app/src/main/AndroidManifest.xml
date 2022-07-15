@@ -10,10 +10,25 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".view.admin.ActivityEdit"
+            android:exported="false" />
+        <activity
+            android:name=".view.admin.ActivityUtama"
+            android:exported="false" />
+        <activity
             android:name=".view.customer.ActivityKeranjang"
             android:exported="false" />
         <activity
-            android:name=".view.ActivityUtama"
+            android:name=".view.customer.ActivityUtama"
+            android:exported="false" />
+        <activity
+            android:name=".view.ActivityRegister"
+            android:exported="false" />
+        <activity
+            android:name=".view.ActivityLogin"
+            android:exported="false" />
+        <activity
+            android:name=".view.ActivityLoading"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

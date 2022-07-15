@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@android:color/white"
     tools:context=".view.customer.fragment.FragmentBeranda">
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
             android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginHorizontal="15dp"
-            android:layout_toLeftOf="@+id/kameraBeranda"
+            android:layout_toLeftOf="@+id/pictureBeranda"
             android:background="@drawable/dec_border">
             <ImageView
                 android:id="@+id/cariBeranda"
@@ -38,20 +39,26 @@
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/kameraBeranda"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:id="@+id/pictureBeranda"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/keranjangBeranda"
-            android:src="@drawable/ic_kamera" />
+            android:src="@drawable/ic_gambar" />
 
         <ImageView
             android:id="@+id/keranjangBeranda"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginHorizontal="15dp"
             android:src="@drawable/ic_keranjang" />
     </RelativeLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerBeranda"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="5dp"/>
 </LinearLayout>

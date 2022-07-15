@@ -1,4 +1,4 @@
-package com.example.projectgols.view.customer
+package com.example.projectgols.view.admin
 
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
@@ -6,9 +6,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.projectgols.R
-import com.example.projectgols.view.customer.fragment.FragmentProfil
-import com.example.projectgols.view.customer.fragment.FragmentBeranda
-import com.example.projectgols.view.customer.fragment.FragmentPesanan
+import com.example.projectgols.view.admin.fragment.FragmentBeranda
+import com.example.projectgols.view.admin.fragment.FragmentLaporan
+import com.example.projectgols.view.admin.fragment.FragmentPesanan
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ActivityUtama : AppCompatActivity() {
@@ -25,8 +25,8 @@ class ActivityUtama : AppCompatActivity() {
                 replaceFragment(FragmentPesanan())
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.profil -> {
-                replaceFragment(FragmentProfil())
+            R.id.laporan -> {
+                replaceFragment(FragmentLaporan())
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -35,16 +35,11 @@ class ActivityUtama : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_utama)
+        setContentView(R.layout.admin_activity_utama)
 
         bottomNav = findViewById(R.id.bottomNav)
         alertDialog = AlertDialog.Builder(this)
-        if (intent.getStringExtra("pesanan").toString() == "true") {
-            replaceFragment(FragmentPesanan())
-            bottomNav.selectedItemId = R.id.pesanan
-        } else {
-            replaceFragment(FragmentBeranda())
-        }
+        replaceFragment(FragmentBeranda())
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 

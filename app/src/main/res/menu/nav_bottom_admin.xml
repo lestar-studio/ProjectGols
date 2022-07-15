@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_pesanan" />
 
     <item
-        android:id="@+id/profil"
-        android:title="Profil"
-        android:icon="@drawable/ic_profil" />
+        android:id="@+id/laporan"
+        android:title="Laporan"
+        android:icon="@drawable/ic_laporan" />
 </menu>
