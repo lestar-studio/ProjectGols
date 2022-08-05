@@ -6,15 +6,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectgols.R
 import com.example.projectgols.model.Barang
-import com.example.projectgols.model.GambarBarang
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
-import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.util.*
 
 class ViewholderBerandaAdmin(itemView: View): RecyclerView.ViewHolder(itemView) {
     private var mView: View = itemView

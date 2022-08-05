@@ -19,9 +19,15 @@ import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.projectgols.R
 import com.example.projectgols.ml.Model
+import com.example.projectgols.model.Barang
+import com.example.projectgols.view.adapter.ViewholderBeranda
 import com.example.projectgols.view.customer.ActivityKeranjang
+import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.google.firebase.database.FirebaseDatabase
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.ByteArrayOutputStream
@@ -41,6 +47,9 @@ class FragmentBeranda : Fragment() {
 
     var imageSize = 32
 
+    lateinit var mLayoutManager: LinearLayoutManager
+    lateinit var mRecyclerView: RecyclerView
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_beranda, container, false)
     }
@@ -52,6 +61,13 @@ class FragmentBeranda : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        mLayoutManager = LinearLayoutManager(requireActivity())
+        mRecyclerView = requireView().findViewById(R.id.recyclerBeranda)
+        mRecyclerView.setHasFixedSize(true)
+        mRecyclerView.layoutManager = mLayoutManager
+
+        load()
 
         textcariBeranda = requireActivity().findViewById(R.id.textcariBeranda)
         pictureBeranda = requireActivity().findViewById(R.id.pictureBeranda)
@@ -84,6 +100,33 @@ class FragmentBeranda : Fragment() {
             val intent = Intent(view.context, ActivityKeranjang::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun load(){
+        val query = FirebaseDatabase.getInstance().getReference("barang")
+        val firebaseRecyclerAdapter = object: FirebaseRecyclerAdapter<Barang, ViewholderBeranda>(
+            Barang::class.java,
+            R.layout.listmenu_beranda,
+            ViewholderBeranda::class.java,
+            query
+        ) {
+            override fun populateViewHolder(viewHolder: ViewholderBeranda, model: Barang, position:Int) {
+                viewHolder.setDetails(model)
+            }
+            override fun onCreateViewHolder(parent:ViewGroup, viewType:Int): ViewholderBeranda {
+                val viewHolder = super.onCreateViewHolder(parent, viewType)
+                viewHolder.setOnClickListener(object: ViewholderBeranda.ClickListener {
+                    override fun onItemClick(view:View, position:Int) {
+//                        val intent = Intent(view.context, ActivityDetail::class.java)
+//                        intent.putExtra("id_menu", viewHolder.menu.id_menu)
+//                        startActivity(intent)
+                    }
+                    override fun onItemLongClick(view:View, position:Int) {}
+                })
+                return viewHolder
+            }
+        }
+        mRecyclerView.adapter = firebaseRecyclerAdapter
     }
 
     private fun openCamera() {
