@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
-class ViewholderBerandaAdmin(itemView: View): RecyclerView.ViewHolder(itemView) {
+class ViewholderBeranda(itemView: View): RecyclerView.ViewHolder(itemView) {
     private var mView: View = itemView
     private var mClickListener: ClickListener? = null
     var barang = Barang()
@@ -34,7 +34,6 @@ class ViewholderBerandaAdmin(itemView: View): RecyclerView.ViewHolder(itemView) 
         namaMenu.text = barang.nama_brg
         hargaMenu.text = "Rp. " + formatNumber.format(barang.harga.toInt()) + ",00"
         deskripsiMenu.text = barang.deskripsi
-
         Picasso.get().load(barang.img_brg[0]).into(imgMenu)
     }
 
