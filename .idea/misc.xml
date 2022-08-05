@@ -6,6 +6,7 @@
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/drawable/dec_border.xml" value="0.1545" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/drawable/dec_button.xml" value="0.1545" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/drawable/dec_gradasi.xml" value="0.1545" />
+        <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/layout/activity_detail.xml" value="0.25" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/layout/activity_edit.xml" value="0.2359375" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/layout/activity_keranjang.xml" value="0.25" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/layout/activity_loading.xml" value="0.2" />
@@ -27,21 +28,10 @@
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/menu/bar_laporan_admin.xml" value="0.25" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/menu/nav_bottom.xml" value="0.25" />
         <entry key="..\:/Project/Client/ProjectGols/app/src/main/res/menu/nav_bottom_admin.xml" value="0.24895833333333334" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/drawable/camera.xml" value="0.2265" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/drawable/shape.xml" value="0.2265" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/activity_edit.xml" value="0.25" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/activity_keranjang.xml" value="0.25" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/activity_loading.xml" value="0.25" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/activity_utama.xml" value="0.25" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/admin_activity_utama.xml" value="0.25" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/camera_open.xml" value="0.4" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/fragment_beranda.xml" value="0.2" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/fragment_pesanan.xml" value="0.25" />
-        <entry key="..\:/project/pribadi/Dedy (Gols-AI)/ProjectGols/app/src/main/res/layout/listmenu_beranda.xml" value="0.25" />
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">
