@@ -23,13 +23,27 @@
             android:textStyle="bold"/>
     </androidx.appcompat.widget.Toolbar>
 
-    <ImageView
+    <com.denzcoskun.imageslider.ImageSlider
         android:id="@+id/imgDetail"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginBottom="15dp"
-        android:src="@drawable/tes_logo2"
-        android:scaleType="centerCrop"/>
+        app:iss_auto_cycle="false"
+        app:iss_delay="0"
+        app:iss_placeholder="@android:color/darker_gray"
+        app:iss_error_image="@android:color/darker_gray"
+        app:iss_corner_radius="5"
+        app:iss_selected_dot="@drawable/default_selected_dot"
+        app:iss_unselected_dot="@drawable/default_unselected_dot"
+        app:iss_period="1000"
+        tools:ignore="MissingConstraints" />
+
+<!--    <ImageView-->
+<!--        android:id="@+id/imgDetail"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="200dp"-->
+<!--        android:layout_marginBottom="15dp"-->
+<!--        android:src="@drawable/tes_logo2"-->
+<!--        android:scaleType="centerCrop"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -68,7 +82,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/lemakDetail"
+                        android:id="@+id/hargaDetail"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Rp.100.000,00"
@@ -111,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
                     <TextView
-                        android:id="@+id/proteinDetail"
+                        android:id="@+id/stokDetail"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="40"

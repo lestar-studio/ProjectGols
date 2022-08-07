@@ -1,48 +1,58 @@
 package com.example.projectgols.view.adapter
 
+import android.content.Intent
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectgols.R
 import com.example.projectgols.model.Barang
+import com.example.projectgols.view.customer.ActivityDetail
 import com.squareup.picasso.Picasso
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
-class ViewholderBeranda(itemView: View): RecyclerView.ViewHolder(itemView) {
-    private var mView: View = itemView
-    private var mClickListener: ClickListener? = null
-    var barang = Barang()
+class ViewholderBeranda(val data: ArrayList<Barang>): RecyclerView.Adapter<ViewholderBeranda.ViewHolder>() {
     var formatNumber: NumberFormat = DecimalFormat("#,###")
 
-    init {
-        itemView.setOnClickListener { view -> mClickListener!!.onItemClick(view, adapterPosition) }
-        itemView.setOnLongClickListener { view ->
-            mClickListener!!.onItemLongClick(view, adapterPosition)
-            true
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val namaMenu : TextView
+        val hargaMenu : TextView
+        val deskripsiMenu : TextView
+        val imgMenu: ImageView
+        val mView: View
+        init {
+            namaMenu = view.findViewById(R.id.namaMenu)
+            hargaMenu = view.findViewById(R.id.hargaMenu)
+            deskripsiMenu = view.findViewById(R.id.deskripsiMenu)
+            imgMenu = view.findViewById(R.id.imgMenu)
+            mView = view
         }
     }
 
-    fun setDetails(barang: Barang) {
-        this.barang = barang
-        val namaMenu = mView.findViewById(R.id.namaMenu) as TextView
-        val hargaMenu = mView.findViewById(R.id.hargaMenu) as TextView
-        val deskripsiMenu = mView.findViewById(R.id.deskripsiMenu) as TextView
-        val imgMenu = mView.findViewById(R.id.imgMenu) as ImageView
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.listmenu_beranda, parent, false)
 
-        namaMenu.text = barang.nama_brg
-        hargaMenu.text = "Rp. " + formatNumber.format(barang.harga.toInt()) + ",00"
-        deskripsiMenu.text = barang.deskripsi
-        Picasso.get().load(barang.img_brg[0]).into(imgMenu)
+        return ViewHolder(view)
     }
 
-    interface ClickListener {
-        fun onItemClick(view: View, position:Int)
-        fun onItemLongClick(view: View, position:Int)
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.namaMenu.text = data[position].nama_brg
+        holder.hargaMenu.text = "Rp. " + formatNumber.format(data[position].harga.toInt()) + ",00"
+        holder.deskripsiMenu.text = data[position].deskripsi
+        Picasso.get().load(data[position].img_brg[0]).into(holder.imgMenu)
+
+        holder.mView.setOnClickListener {
+            val intent = Intent(it.context, ActivityDetail::class.java)
+            intent.putExtra("id_brg", data[position].id_brg)
+            it.context.startActivity(intent)
+        }
     }
 
-    fun setOnClickListener(clickListener: ClickListener) {
-        mClickListener = clickListener
+    override fun getItemCount(): Int {
+        return data.size
     }
 }

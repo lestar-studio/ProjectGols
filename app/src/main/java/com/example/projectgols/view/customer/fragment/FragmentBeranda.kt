@@ -10,12 +10,12 @@ import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Debug
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.*
 import android.widget.*
-import androidx.cardview.widget.CardView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -25,8 +25,10 @@ import com.example.projectgols.R
 import com.example.projectgols.ml.Model
 import com.example.projectgols.model.Barang
 import com.example.projectgols.view.adapter.ViewholderBeranda
+import com.example.projectgols.view.customer.ActivityDetail
 import com.example.projectgols.view.customer.ActivityKeranjang
 import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
@@ -36,7 +38,7 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 class FragmentBeranda : Fragment() {
-    lateinit var textcariBeranda: TextView
+    lateinit var textcariBeranda: EditText
     lateinit var pictureBeranda: ImageView
     lateinit var keranjangBeranda: ImageView
     lateinit var tempImage: ImageView
@@ -49,6 +51,8 @@ class FragmentBeranda : Fragment() {
 
     lateinit var mLayoutManager: LinearLayoutManager
     lateinit var mRecyclerView: RecyclerView
+    lateinit var dataBarang: ArrayList<Barang>
+    lateinit var adapterBarang: ViewholderBeranda
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_beranda, container, false)
@@ -66,8 +70,10 @@ class FragmentBeranda : Fragment() {
         mRecyclerView = requireView().findViewById(R.id.recyclerBeranda)
         mRecyclerView.setHasFixedSize(true)
         mRecyclerView.layoutManager = mLayoutManager
+        dataBarang = arrayListOf()
+        adapterBarang = ViewholderBeranda(dataBarang)
 
-        load()
+        load("", 0)
 
         textcariBeranda = requireActivity().findViewById(R.id.textcariBeranda)
         pictureBeranda = requireActivity().findViewById(R.id.pictureBeranda)
@@ -100,33 +106,44 @@ class FragmentBeranda : Fragment() {
             val intent = Intent(view.context, ActivityKeranjang::class.java)
             startActivity(intent)
         }
+
+        textcariBeranda.addTextChangedListener( object : TextWatcher{
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                load(p0.toString(), 0)
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+        })
     }
 
-    private fun load(){
-        val query = FirebaseDatabase.getInstance().getReference("barang")
-        val firebaseRecyclerAdapter = object: FirebaseRecyclerAdapter<Barang, ViewholderBeranda>(
-            Barang::class.java,
-            R.layout.listmenu_beranda,
-            ViewholderBeranda::class.java,
-            query
-        ) {
-            override fun populateViewHolder(viewHolder: ViewholderBeranda, model: Barang, position:Int) {
-                viewHolder.setDetails(model)
-            }
-            override fun onCreateViewHolder(parent:ViewGroup, viewType:Int): ViewholderBeranda {
-                val viewHolder = super.onCreateViewHolder(parent, viewType)
-                viewHolder.setOnClickListener(object: ViewholderBeranda.ClickListener {
-                    override fun onItemClick(view:View, position:Int) {
-//                        val intent = Intent(view.context, ActivityDetail::class.java)
-//                        intent.putExtra("id_menu", viewHolder.menu.id_menu)
-//                        startActivity(intent)
+    private fun load(search: String, type: Int){
+        dataBarang.clear()
+        mRecyclerView.invalidate()
+        FirebaseDatabase.getInstance().getReference("barang").get().addOnSuccessListener {
+            for (vl in it.children){
+                val data = vl.getValue(Barang::class.java)
+
+                if(type.equals(0)){
+                    if(search.equals(""))
+                        dataBarang.add(data!!)
+                    else{
+                        if(data!!.nama_brg.toLowerCase().contains(search))
+                            dataBarang.add(data)
                     }
-                    override fun onItemLongClick(view:View, position:Int) {}
-                })
-                return viewHolder
+                } else {
+                    if(data!!.jenis.equals(search))
+                        dataBarang.add(data)
+                }
             }
+
+            adapterBarang = ViewholderBeranda(dataBarang.distinctBy { it.nama_brg } as ArrayList<Barang>)
+            mRecyclerView.adapter = adapterBarang
         }
-        mRecyclerView.adapter = firebaseRecyclerAdapter
     }
 
     private fun openCamera() {
@@ -215,6 +232,7 @@ class FragmentBeranda : Fragment() {
             }
             val classes = arrayOf("Celana Formal", "Celana Panjang", "Celana Pendek", "Kaos", "Kemeja", "Sweater")
             Log.d("clasifikasi", classes[maxPos])
+            load(classes[maxPos], 1)
 
             model.close()
         } catch (e: IOException) {

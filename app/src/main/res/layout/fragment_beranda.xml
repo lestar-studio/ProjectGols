@@ -26,7 +26,7 @@
                 android:layout_marginLeft="10dp"
                 android:src="@drawable/ic_cari" />
 
-            <TextView
+            <EditText
                 android:id="@+id/textcariBeranda"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -35,7 +35,7 @@
                 android:layout_toRightOf="@id/cariBeranda"
                 android:hint="Cari Produk"
                 android:textColor="@android:color/black"
-                android:textSize="15dp" />
+                android:textSize="13dp" />
         </RelativeLayout>
 
         <ImageView

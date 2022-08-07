@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ActivityDetail"
+            android:name=".view.customer.ActivityDetail"
             android:exported="false" />
         <activity
             android:name=".view.admin.ActivityEdit"
