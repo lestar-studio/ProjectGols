@@ -9,6 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
         android:layout_marginVertical="10dp">
+
         <ImageView
             android:id="@+id/imgMenu"
             android:layout_width="80dp"

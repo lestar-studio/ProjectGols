@@ -47,7 +47,7 @@ class ViewholderBeranda(val data: ArrayList<Barang>): RecyclerView.Adapter<Viewh
 
         holder.mView.setOnClickListener {
             val intent = Intent(it.context, ActivityDetail::class.java)
-            intent.putExtra("id_brg", data[position].id_brg)
+            intent.putExtra("id_brg", data[position].id_brg.toString())
             it.context.startActivity(intent)
         }
     }
