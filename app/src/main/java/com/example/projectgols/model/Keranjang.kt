@@ -1,15 +1,15 @@
 package com.example.projectgols.model
 
 class Keranjang {
-    var id_keranjang: Int = 0
-    var id_user: Int = 0
+    var id_keranjang: String = ""
+    var id_user: String = ""
     var tgl_get: String = ""
     var qty: Int = 0
     var id_brg: Int = 0
 
     constructor() {}
     constructor(
-        id_keranjang:Int, id_user:Int, tgl_get: String, qty: Int, id_brg: Int
+        id_keranjang:String, id_user:String, tgl_get: String, qty: Int, id_brg: Int
     ) {
         this.id_keranjang = id_keranjang
         this.id_user = id_user

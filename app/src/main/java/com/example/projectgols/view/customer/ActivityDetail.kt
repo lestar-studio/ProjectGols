@@ -73,48 +73,63 @@ class ActivityDetail : AppCompatActivity() {
     }
 
     private fun addKeranjang(){
-        FirebaseDatabase.getInstance().getReference("keranjang")
-            .orderByKey().limitToLast(1).addListenerForSingleValueEvent( object : ValueEventListener{
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val sdf = SimpleDateFormat("dd-M-yyyy")
-                    val currentDate = sdf.format(Date())
-                    if (snapshot.exists()){
-                        for (data in snapshot.children){
-                            val value = data.getValue(Keranjang::class.java)
-                            val lastid = value!!.id_keranjang + 1
+        val ref = FirebaseDatabase.getInstance().getReference("keranjang")
+        val id  = ref.push().key.toString()
+        val sdf = SimpleDateFormat("dd-M-yyyy")
+        val currentDate = sdf.format(Date())
 
-                            val newdata = Keranjang(lastid,
-                                SP.getString("id_user", "").toString().toInt(),
-                                currentDate.toString(), 1, id_barang)
-                            FirebaseDatabase.getInstance().getReference("keranjang").child(lastid.toString())
-                                .setValue(newdata).addOnCompleteListener {
-                                    val intent = Intent(this@ActivityDetail,
-                                        ActivityKeranjang::class.java)
-                                    startActivity(intent)
-                                    finish()
-                                }
-                        }
-                    }
-                    else{
-                        val lastid = 0
-
-                        val newdata = Keranjang(lastid,
-                            SP.getString("id_user", "").toString().toInt(),
-                            currentDate.toString(), 1, id_barang)
-                        FirebaseDatabase.getInstance().getReference("keranjang").child(lastid.toString())
-                            .setValue(newdata).addOnCompleteListener {
-                                val intent = Intent(this@ActivityDetail,
-                                    ActivityKeranjang::class.java)
-                                startActivity(intent)
-                                finish()
-                            }
-                    }
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-
-            })
+        val newdata = Keranjang(id,
+            SP.getString("id_user", "").toString(),
+            currentDate.toString(), 1, id_barang)
+        ref.child(id)
+            .setValue(newdata).addOnCompleteListener {
+                val intent = Intent(this@ActivityDetail,
+                    ActivityKeranjang::class.java)
+                startActivity(intent)
+                finish()
+            }
+//        FirebaseDatabase.getInstance().getReference("keranjang")
+//            .orderByKey().limitToLast(1).addListenerForSingleValueEvent( object : ValueEventListener{
+//                override fun onDataChange(snapshot: DataSnapshot) {
+//                    val sdf = SimpleDateFormat("dd-M-yyyy")
+//                    val currentDate = sdf.format(Date())
+//                    if (snapshot.exists()){
+//                        for (data in snapshot.children){
+//                            val value = data.getValue(Keranjang::class.java)
+//                            val lastid = value!!.id_keranjang + 1
+//
+//                            val newdata = Keranjang(lastid,
+//                                SP.getString("id_user", "").toString().toInt(),
+//                                currentDate.toString(), 1, id_barang)
+//                            FirebaseDatabase.getInstance().getReference("keranjang").child(lastid.toString())
+//                                .setValue(newdata).addOnCompleteListener {
+//                                    val intent = Intent(this@ActivityDetail,
+//                                        ActivityKeranjang::class.java)
+//                                    startActivity(intent)
+//                                    finish()
+//                                }
+//                        }
+//                    }
+//                    else{
+//                        val lastid = 0
+//
+//                        val newdata = Keranjang(lastid,
+//                            SP.getString("id_user", "").toString().toInt(),
+//                            currentDate.toString(), 1, id_barang)
+//                        FirebaseDatabase.getInstance().getReference("keranjang").child(lastid.toString())
+//                            .setValue(newdata).addOnCompleteListener {
+//                                val intent = Intent(this@ActivityDetail,
+//                                    ActivityKeranjang::class.java)
+//                                startActivity(intent)
+//                                finish()
+//                            }
+//                    }
+//                }
+//
+//                override fun onCancelled(error: DatabaseError) {
+//                    TODO("Not yet implemented")
+//                }
+//
+//            })
     }
 }

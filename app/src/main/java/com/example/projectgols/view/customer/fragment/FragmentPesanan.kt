@@ -61,4 +61,8 @@ class FragmentPesanan : Fragment() {
             btnSelesai.backgroundTintList = ColorStateList.valueOf(resources.getColor(R.color.colorAccent))
         }
     }
+
+    private fun load(status: String) {
+
+    }
 }

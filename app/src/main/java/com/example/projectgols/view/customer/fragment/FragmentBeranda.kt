@@ -105,6 +105,7 @@ class FragmentBeranda : Fragment() {
         keranjangBeranda.setOnClickListener {
             val intent = Intent(view.context, ActivityKeranjang::class.java)
             startActivity(intent)
+
         }
 
         textcariBeranda.addTextChangedListener( object : TextWatcher{
