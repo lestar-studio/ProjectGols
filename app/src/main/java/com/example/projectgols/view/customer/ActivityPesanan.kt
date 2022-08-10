@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -89,6 +90,35 @@ class ActivityPesanan : AppCompatActivity() {
             })
 
         load(intent.getStringExtra("id_pesanan").toString())
+
+        btnBatalPesanan.setOnClickListener {
+            alertDialog.setMessage("Batalkan pesanan ini ?").setCancelable(false)
+                .setPositiveButton("YA", object: DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id:Int) {
+                        FirebaseDatabase.getInstance().getReference("pesanan")
+                            .child(intent.getStringExtra("id_pesanan").toString())
+                            .child("status")
+                            .setValue("batal")
+                            .addOnSuccessListener {
+                                dataPesanan.forEach { row ->
+                                    FirebaseDatabase.getInstance().getReference("barang")
+                                        .child(row.keranjang.id_brg.toString())
+                                        .child("qty_brg")
+                                        .setValue(row.keranjang.qty + row.barang.qty_brg)
+                                }
+                                val intent = Intent(this@ActivityPesanan, ActivityUtama::class.java)
+                                intent.putExtra("pesanan", "true")
+                                startActivity(intent)
+                                finish()
+                            }
+                    }
+                })
+                .setNegativeButton("TIDAK", object: DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id:Int) {
+                        dialog.cancel()
+                    }
+                }).create().show()
+        }
     }
 
     private fun load(id: String){
@@ -103,6 +133,9 @@ class ActivityPesanan : AppCompatActivity() {
                     }
                     statusPesanan.text = fetchData.status.toUpperCase()
                     lokasiPesanan.setText(fetchData.alamat)
+
+                    if(fetchData.status.equals("menunggu"))
+                        btnBatalPesanan.visibility = View.VISIBLE
 
                     FirebaseDatabase.getInstance().getReference("user").orderByKey().equalTo(fetchData.id_user)
                         .get().addOnSuccessListener { rowu ->
