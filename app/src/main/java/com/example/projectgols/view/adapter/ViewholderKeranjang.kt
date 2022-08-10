@@ -15,7 +15,7 @@ import com.google.firebase.database.FirebaseDatabase
 import java.text.DecimalFormat
 import java.text.NumberFormat
 
-class ViewholderKeranjang(val data: ArrayList<KeranjangBarang>): RecyclerView.Adapter<ViewholderKeranjang.ViewHolder>() {
+class ViewholderKeranjang(val data: ArrayList<KeranjangBarang>, val type: Int = 0): RecyclerView.Adapter<ViewholderKeranjang.ViewHolder>() {
     var formatNumber: NumberFormat = DecimalFormat("#,###")
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -45,47 +45,54 @@ class ViewholderKeranjang(val data: ArrayList<KeranjangBarang>): RecyclerView.Ad
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.namaBarang.text = data[position].barang.nama_brg
         holder.hargaBarang.text = "Rp. " + formatNumber.format(data[position].barang.harga) + ",00"
-        holder.stokBarang.text = data[position].barang.qty_brg.toString()
+        holder.stokBarang.text = "Stok : " + data[position].barang.qty_brg.toString()
 
         var jumlah = data[position].keranjang.qty
         holder.jumlahBarang.setText(jumlah.toString())
 
-        if(jumlah.equals(data[position].barang.qty_brg))
+        if(type.equals(1)){
             holder.tambahBarang.visibility = View.INVISIBLE
-        else
-            holder.tambahBarang.visibility = View.VISIBLE
-
-        holder.tambahBarang.setOnClickListener {
-            jumlah++
-
-            setQty(holder.jumlahBarang, data[position].keranjang.id_keranjang, jumlah)
+            holder.kurangBarang.visibility = View.INVISIBLE
         }
+        else {
+            if (jumlah.equals(data[position].barang.qty_brg))
+                holder.tambahBarang.visibility = View.INVISIBLE
+            else
+                holder.tambahBarang.visibility = View.VISIBLE
 
-        holder.kurangBarang.setOnClickListener {
-            jumlah--
+            holder.tambahBarang.setOnClickListener {
+                jumlah++
 
-            if(jumlah.equals(0)){
-                val id_keranjang = data[position].keranjang.id_keranjang
-                AlertDialog.Builder(it.context).setMessage("Hapus "+ data[position].barang.nama_brg +" dari pesanan ?")
-                    .setCancelable(false)
-                    .setPositiveButton("YA", object: DialogInterface.OnClickListener {
-                        override fun onClick(dialog: DialogInterface, id:Int) {
-                            FirebaseDatabase.getInstance().getReference("keranjang")
-                                .child(id_keranjang)
-                                .removeValue()
-                                .addOnSuccessListener {
-                                    dialog.cancel()
-                                }
-                        }
-                    })
-                    .setNegativeButton("TIDAK", object: DialogInterface.OnClickListener {
-                        override fun onClick(dialog: DialogInterface, id:Int) {
-                            jumlah++
-                            dialog.cancel()
-                        }
-                    }).create().show()
-            } else
                 setQty(holder.jumlahBarang, data[position].keranjang.id_keranjang, jumlah)
+            }
+
+            holder.kurangBarang.setOnClickListener {
+                jumlah--
+
+                if (jumlah.equals(0)) {
+                    val id_keranjang = data[position].keranjang.id_keranjang
+                    AlertDialog.Builder(it.context)
+                        .setMessage("Hapus " + data[position].barang.nama_brg + " dari pesanan ?")
+                        .setCancelable(false)
+                        .setPositiveButton("YA", object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface, id: Int) {
+                                FirebaseDatabase.getInstance().getReference("keranjang")
+                                    .child(id_keranjang)
+                                    .removeValue()
+                                    .addOnSuccessListener {
+                                        dialog.cancel()
+                                    }
+                            }
+                        })
+                        .setNegativeButton("TIDAK", object : DialogInterface.OnClickListener {
+                            override fun onClick(dialog: DialogInterface, id: Int) {
+                                jumlah++
+                                dialog.cancel()
+                            }
+                        }).create().show()
+                } else
+                    setQty(holder.jumlahBarang, data[position].keranjang.id_keranjang, jumlah)
+            }
         }
     }
 

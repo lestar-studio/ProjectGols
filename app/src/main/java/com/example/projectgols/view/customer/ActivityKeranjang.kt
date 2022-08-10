@@ -51,6 +51,7 @@ class ActivityKeranjang : AppCompatActivity() {
     var formatNumber: NumberFormat = DecimalFormat("#,###")
 
     var konfigurasi = Konfigurasi()
+    var total = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,8 +84,6 @@ class ActivityKeranjang : AppCompatActivity() {
                         val vl = i.getValue(Konfigurasi::class.java)
 
                         konfigurasi = vl!!
-                        ongkirKeranjang.text = "Rp. " + formatNumber.format(vl.ongkir) + ",00"
-                        adminKeranjang.text = "Rp. " + formatNumber.format(vl.biaya_admin) + ",00"
                     }
                 }
 
@@ -95,6 +94,8 @@ class ActivityKeranjang : AppCompatActivity() {
             })
 
         load(SP.getString("id_user", "").toString())
+        btnPesanKeranjang.isEnabled = false
+        btnPesanKeranjang.isClickable = false
 
         btnPesanKeranjang.setOnClickListener {
             alertDialog.setMessage("Cek kembali pesanan anda, Apakah sudah sesuai ?").setCancelable(false)
@@ -133,6 +134,10 @@ class ActivityKeranjang : AppCompatActivity() {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     var subtotal = 0
                     dataKeranjang.clear()
+                    if(snapshot.exists()){
+                        btnPesanKeranjang.isEnabled = true
+                        btnPesanKeranjang.isClickable = true
+                    }
                     for (i in snapshot.children){
                         val vl = i.getValue(Keranjang::class.java)
 
@@ -144,10 +149,12 @@ class ActivityKeranjang : AppCompatActivity() {
                                     dataKeranjang.add(KeranjangBarang(vl, vlb!!))
                                     subtotal += (vl.qty * vlb.harga)
                                 }
+                                ongkirKeranjang.text = "Rp. " + formatNumber.format(konfigurasi.ongkir) + ",00"
+                                adminKeranjang.text = "Rp. " + formatNumber.format(konfigurasi.biaya_admin) + ",00"
                                 subtotalKeranjang.text = "Rp. " + formatNumber.format(subtotal) + ",00"
                                 val ppn = konfigurasi.ppn * subtotal / 100
                                 ppnKeranjang.text = "Rp. " + formatNumber.format(ppn) + ",00"
-                                val total = subtotal + konfigurasi.ongkir + ppn + konfigurasi.biaya_admin
+                                total = subtotal + konfigurasi.ongkir + ppn + konfigurasi.biaya_admin
                                 totalKeranjang.text = "Rp. " + formatNumber.format(total) + ",00"
 
                                 adapterKeranjang = ViewholderKeranjang(dataKeranjang)
@@ -181,7 +188,7 @@ class ActivityKeranjang : AppCompatActivity() {
             )
             index++
         }
-        val newValue = Pesanan(id, SP.getString("id_user", "").toString(), currentDate, "menunggu", detail)
+        val newValue = Pesanan(id, SP.getString("id_user", "").toString(), currentDate, "menunggu", detail, total, lokasiKeranjang.text.toString())
         ref.child(id).setValue(newValue).addOnSuccessListener {
             dataKeranjang.forEach {
                 val barang = it.barang
