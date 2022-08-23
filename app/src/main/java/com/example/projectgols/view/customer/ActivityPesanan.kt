@@ -4,29 +4,27 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.projectgols.R
 import com.example.projectgols.model.*
 import com.example.projectgols.view.adapter.ViewholderKeranjang
-import com.example.projectgols.view.adapter.ViewholderPesanan
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import java.text.DecimalFormat
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.*
-import kotlin.collections.ArrayList
+
 
 class ActivityPesanan : AppCompatActivity() {
     lateinit var identitasPesanan: TextView
@@ -37,7 +35,10 @@ class ActivityPesanan : AppCompatActivity() {
     lateinit var adminPesanan: TextView
     lateinit var totalPesanan: TextView
     lateinit var statusPesanan: TextView
+    lateinit var constraintParent: ConstraintLayout
     lateinit var btnBatalPesanan: Button
+    lateinit var btnProsesPesanan: Button
+    lateinit var btnSelesaiPesanan: Button
     lateinit var alertDialog: AlertDialog.Builder
     lateinit var SP: SharedPreferences
 
@@ -63,7 +64,10 @@ class ActivityPesanan : AppCompatActivity() {
         adminPesanan = findViewById(R.id.adminPesanan)
         totalPesanan = findViewById(R.id.totalPesanan)
         statusPesanan = findViewById(R.id.statusPesanan)
+        constraintParent = findViewById(R.id.constraintParent)
         btnBatalPesanan = findViewById(R.id.btnBatalPesanan)
+        btnProsesPesanan = findViewById(R.id.btnProsesPesanan)
+        btnSelesaiPesanan = findViewById(R.id.btnSelesaiPesanan)
         alertDialog = AlertDialog.Builder(this)
         SP = getSharedPreferences("User", Context.MODE_PRIVATE)
 
@@ -106,7 +110,53 @@ class ActivityPesanan : AppCompatActivity() {
                                         .child("qty_brg")
                                         .setValue(row.keranjang.qty + row.barang.qty_brg)
                                 }
-                                val intent = Intent(this@ActivityPesanan, ActivityUtama::class.java)
+                                val intent = Intent(this@ActivityPesanan, com.example.projectgols.view.admin.ActivityUtama::class.java)
+                                intent.putExtra("pesanan", "true")
+                                startActivity(intent)
+                                finish()
+                            }
+                    }
+                })
+                .setNegativeButton("TIDAK", object: DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id:Int) {
+                        dialog.cancel()
+                    }
+                }).create().show()
+        }
+
+        btnProsesPesanan.setOnClickListener {
+            alertDialog.setMessage("Lanjut proses pesanan ini ?").setCancelable(false)
+                .setPositiveButton("YA", object: DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id:Int) {
+                        FirebaseDatabase.getInstance().getReference("pesanan")
+                            .child(intent.getStringExtra("id_pesanan").toString())
+                            .child("status")
+                            .setValue("proses")
+                            .addOnSuccessListener {
+                                val intent = Intent(this@ActivityPesanan, com.example.projectgols.view.admin.ActivityUtama::class.java)
+                                intent.putExtra("pesanan", "true")
+                                startActivity(intent)
+                                finish()
+                            }
+                    }
+                })
+                .setNegativeButton("TIDAK", object: DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id:Int) {
+                        dialog.cancel()
+                    }
+                }).create().show()
+        }
+
+        btnSelesaiPesanan.setOnClickListener {
+            alertDialog.setMessage("Lanjut proses pesanan ini ?").setCancelable(false)
+                .setPositiveButton("YA", object: DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, id:Int) {
+                        FirebaseDatabase.getInstance().getReference("pesanan")
+                            .child(intent.getStringExtra("id_pesanan").toString())
+                            .child("status")
+                            .setValue("selesai")
+                            .addOnSuccessListener {
+                                val intent = Intent(this@ActivityPesanan, com.example.projectgols.view.admin.ActivityUtama::class.java)
                                 intent.putExtra("pesanan", "true")
                                 startActivity(intent)
                                 finish()
@@ -134,8 +184,26 @@ class ActivityPesanan : AppCompatActivity() {
                     statusPesanan.text = fetchData.status.toUpperCase()
                     lokasiPesanan.setText(fetchData.alamat)
 
-                    if(fetchData.status.equals("menunggu"))
-                        btnBatalPesanan.visibility = View.VISIBLE
+
+
+                    if(SP.getString("level", "").equals("Admin")){
+                        if(fetchData.status.equals("menunggu")){
+                            btnBatalPesanan.visibility = View.VISIBLE
+                            btnProsesPesanan.visibility = View.VISIBLE
+                        }
+                        if(fetchData.status.equals("proses")) {
+                            btnBatalPesanan.visibility = View.VISIBLE
+                            btnSelesaiPesanan.visibility = View.VISIBLE
+                        }
+                    }
+                    else {
+                        val constraintSet = ConstraintSet()
+                        constraintSet.clone(constraintParent)
+
+                        if(fetchData.status.equals("menunggu")) {
+                            btnBatalPesanan.visibility = View.VISIBLE
+                        }
+                    }
 
                     FirebaseDatabase.getInstance().getReference("user").orderByKey().equalTo(fetchData.id_user)
                         .get().addOnSuccessListener { rowu ->

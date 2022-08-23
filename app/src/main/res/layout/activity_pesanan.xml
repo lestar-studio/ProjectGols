@@ -334,17 +334,59 @@
         android:background="@android:color/white"
         android:orientation="horizontal"
         app:cardElevation="5dp">
-        <Button
-            android:id="@+id/btnBatalPesanan"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintParent"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:visibility="invisible"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginVertical="10dp"
-            android:background="@drawable/dec_button"
-            android:backgroundTint="@android:color/holo_red_light"
-            android:text="Batalkan PESANAN"
-            android:textColor="@android:color/white"
-            android:textSize="15dp" />
+            android:layout_marginVertical="10dp">
+
+            <Button
+                android:id="@+id/btnBatalPesanan"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/btnProsesPesanan"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:visibility="invisible"
+                android:background="@drawable/dec_button"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:text="Batalkan PESANAN"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/btnProsesPesanan"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toRightOf="@+id/btnBatalPesanan"
+                app:layout_constraintRight_toRightOf="parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:visibility="invisible"
+                android:background="@drawable/dec_button"
+                android:backgroundTint="@android:color/holo_blue_dark"
+                android:text="Proses PESANAN"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+
+            <Button
+                android:id="@+id/btnSelesaiPesanan"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:layout_constraintLeft_toRightOf="@+id/btnBatalPesanan"
+                app:layout_constraintRight_toRightOf="parent"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:visibility="invisible"
+                android:background="@drawable/dec_button"
+                android:backgroundTint="@android:color/holo_orange_dark"
+                android:text="Selesai PESANAN"
+                android:textColor="@android:color/white"
+                android:textSize="15dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

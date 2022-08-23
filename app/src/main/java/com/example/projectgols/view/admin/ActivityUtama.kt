@@ -39,7 +39,12 @@ class ActivityUtama : AppCompatActivity() {
 
         bottomNav = findViewById(R.id.bottomNav)
         alertDialog = AlertDialog.Builder(this)
-        replaceFragment(FragmentBeranda())
+        if (intent.getStringExtra("pesanan").toString() == "true") {
+            replaceFragment(FragmentPesanan())
+            bottomNav.selectedItemId = R.id.pesanan
+        } else {
+            replaceFragment(FragmentBeranda())
+        }
         bottomNav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }
 
