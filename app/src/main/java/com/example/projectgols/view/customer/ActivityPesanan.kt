@@ -184,8 +184,6 @@ class ActivityPesanan : AppCompatActivity() {
                     statusPesanan.text = fetchData.status.toUpperCase()
                     lokasiPesanan.setText(fetchData.alamat)
 
-
-
                     if(SP.getString("level", "").equals("Admin")){
                         if(fetchData.status.equals("menunggu")){
                             btnBatalPesanan.visibility = View.VISIBLE
@@ -201,6 +199,8 @@ class ActivityPesanan : AppCompatActivity() {
                         constraintSet.clone(constraintParent)
 
                         if(fetchData.status.equals("menunggu")) {
+                            constraintSet.connect(R.id.btnBatalPesanan, ConstraintSet.RIGHT, R.id.constraintParent, ConstraintSet.RIGHT, 0)
+                            constraintSet.applyTo(constraintParent)
                             btnBatalPesanan.visibility = View.VISIBLE
                         }
                     }
