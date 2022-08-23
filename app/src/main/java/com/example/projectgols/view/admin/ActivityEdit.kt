@@ -23,6 +23,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class ActivityEdit : AppCompatActivity() {
@@ -40,7 +41,7 @@ class ActivityEdit : AppCompatActivity() {
     lateinit var tipeMenu: Spinner
     lateinit var btnSimpan: Button
 
-    lateinit var oldData: Barang
+    var oldData: Barang? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,7 +73,7 @@ class ActivityEdit : AppCompatActivity() {
                         oldData = value!!
 
                         var type = 0
-                        when (oldData.jenis) {
+                        when (oldData!!.jenis) {
                             "Celana Formal" -> type = 0
                             "Celana Panjang"-> type = 1
                             "Celana Pendek"-> type = 2
@@ -196,11 +197,13 @@ class ActivityEdit : AppCompatActivity() {
                         val urlBarang = arrayListOf<String>()
                         val tipe      = tipeMenu.selectedItem.toString()
 
-                        var index = 1
+                        var index = 0
                         imgUri.forEach {
                             if(it.toString().contains("https://firebasestorage.googleapis.com")) {
-                                index++
                                 urlBarang.add(it.toString())
+                                index++
+
+                                toSave(index, urlBarang)
                             }
                             else {
                                 val ref = FirebaseStorage.getInstance().reference
@@ -218,37 +221,8 @@ class ActivityEdit : AppCompatActivity() {
                                         if (task.isSuccessful) {
                                             urlBarang.add(task.result.toString())
                                             index++
-                                        }
-                                    }
-                            }
 
-                            if(imgUri.size.equals(index)){
-                                FirebaseDatabase.getInstance().reference
-                                    .child("barang")
-                                    .orderByKey()
-                                    .limitToLast(1)
-                                    .get()
-                                    .addOnSuccessListener { row ->
-                                        for (i in row.children){
-                                            val value = i.getValue(Barang::class.java)
-
-                                            FirebaseDatabase.getInstance().reference
-                                                .child("barang")
-                                                .child((value!!.id_brg + 1).toString())
-                                                .setValue( Barang(
-                                                    (value.id_brg + 1),
-                                                    namaMenu.text.toString(),
-                                                    deskripsiMenu.text.toString(),
-                                                    tipeMenu.selectedItem.toString(),
-                                                    stokMenu.text.toString().toInt(),
-                                                    hargaMenu.text.toString().toInt(),
-                                                    urlBarang
-                                                ))
-                                                .addOnCompleteListener {
-                                                    val intent = Intent(this@ActivityEdit, ActivityUtama::class.java)
-                                                    startActivity(intent)
-                                                    finish()
-                                                }
+                                            toSave(index, urlBarang)
                                         }
                                     }
                             }
@@ -260,6 +234,58 @@ class ActivityEdit : AppCompatActivity() {
                         dialog.cancel()
                     }
                 }).create().show()
+    }
+
+    private fun toSave(index: Int, urlBarang: ArrayList<String>) {
+        if(imgUri.size.equals(index)){
+            if(oldData != null)
+                FirebaseDatabase.getInstance().reference
+                    .child("barang")
+                    .child(oldData!!.id_brg.toString())
+                    .setValue( Barang(
+                        oldData!!.id_brg,
+                        namaMenu.text.toString(),
+                        deskripsiMenu.text.toString(),
+                        tipeMenu.selectedItem.toString(),
+                        stokMenu.text.toString().toInt(),
+                        hargaMenu.text.toString().toInt(),
+                        urlBarang
+                    ))
+                    .addOnCompleteListener {
+                        val intent = Intent(this@ActivityEdit, ActivityUtama::class.java)
+                        startActivity(intent)
+                        finish()
+                    }
+            else
+                FirebaseDatabase.getInstance().reference
+                    .child("barang")
+                    .orderByKey()
+                    .limitToLast(1)
+                    .get()
+                    .addOnSuccessListener { row ->
+                        for (i in row.children){
+                            val value = i.getValue(Barang::class.java)
+
+                            FirebaseDatabase.getInstance().reference
+                                .child("barang")
+                                .child((value!!.id_brg + 1).toString())
+                                .setValue( Barang(
+                                    (value.id_brg + 1),
+                                    namaMenu.text.toString(),
+                                    deskripsiMenu.text.toString(),
+                                    tipeMenu.selectedItem.toString(),
+                                    stokMenu.text.toString().toInt(),
+                                    hargaMenu.text.toString().toInt(),
+                                    urlBarang
+                                ))
+                                .addOnCompleteListener {
+                                    val intent = Intent(this@ActivityEdit, ActivityUtama::class.java)
+                                    startActivity(intent)
+                                    finish()
+                                }
+                        }
+                    }
+        }
     }
 
 }
