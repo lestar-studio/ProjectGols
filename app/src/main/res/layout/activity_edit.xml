@@ -47,6 +47,31 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    app:srcCompat="@drawable/ic_catatan" />
+
+                <Spinner
+                    android:id="@+id/tipeMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:gravity="center_vertical"
+                    android:spinnerMode="dropdown"
+                    android:textColor="@color/colorGray"
+                    android:textSize="15dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
                 <ImageView
                     android:layout_width="30dp"
@@ -90,6 +115,7 @@
                     android:layout_marginLeft="10dp"
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
+                    android:inputType="textMultiLine"
                     android:hint="Masukkan Deskripsi Barang"
                     android:textColor="@color/colorGray"
                     android:textSize="15dp" />
@@ -133,10 +159,37 @@
                     android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="10dp"
+                    app:srcCompat="@drawable/ic_baseline_confirmation_number_24" />
+
+                <EditText
+                    android:id="@+id/stokMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
+                    android:background="@android:color/white"
+                    android:gravity="center_vertical"
+                    android:hint="Masukkan Stok Barang"
+                    android:inputType="number"
+                    android:textColor="@color/colorGray"
+                    android:textSize="15dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/uploadImg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="10dp"
                     app:srcCompat="@drawable/ic_gambar" />
 
                 <TextView
-                    android:id="@+id/gambarMenu"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -144,10 +197,24 @@
                     android:background="@android:color/white"
                     android:gravity="center_vertical"
                     android:hint="Masukkan Gambar Barang"
-                    android:inputType="text"
                     android:textColor="@color/colorGray"
                     android:textSize="15dp" />
             </LinearLayout>
+
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/imgUpload"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                app:iss_auto_cycle="false"
+                android:layout_marginTop="20dp"
+                app:iss_delay="0"
+                app:iss_placeholder="@android:color/darker_gray"
+                app:iss_error_image="@android:color/darker_gray"
+                app:iss_corner_radius="5"
+                app:iss_selected_dot="@drawable/default_selected_dot"
+                app:iss_unselected_dot="@drawable/default_unselected_dot"
+                app:iss_period="1000"
+                tools:ignore="MissingConstraints" />
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -47,6 +47,7 @@ class FragmentBeranda : Fragment() {
         val id = item.itemId
         if (id == R.id.tambahMenu) {
             val intent = Intent(activity, ActivityEdit::class.java)
+            intent.putExtra("id_barang", "")
             startActivity(intent)
             return true
         }
@@ -69,9 +70,9 @@ class FragmentBeranda : Fragment() {
                 val viewHolder = super.onCreateViewHolder(parent, viewType)
                 viewHolder.setOnClickListener(object: ViewholderBerandaAdmin.ClickListener {
                     override fun onItemClick(view:View, position:Int) {
-//                        val intent = Intent(view.context, ActivityDetail::class.java)
-//                        intent.putExtra("id_menu", viewHolder.menu.id_menu)
-//                        startActivity(intent)
+                        val intent = Intent(view.context, ActivityEdit::class.java)
+                        intent.putExtra("id_barang", viewHolder.barang.id_brg.toString())
+                        startActivity(intent)
                     }
                     override fun onItemLongClick(view:View, position:Int) {}
                 })
