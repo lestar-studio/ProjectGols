@@ -28,6 +28,9 @@ import com.example.projectgols.view.adapter.ViewholderBeranda
 import com.example.projectgols.view.customer.ActivityDetail
 import com.example.projectgols.view.customer.ActivityKeranjang
 import com.firebase.ui.database.FirebaseRecyclerAdapter
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.FileDataPart
+import com.github.kittinunf.fuel.core.Method
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import okhttp3.Call
@@ -44,6 +47,10 @@ import java.io.IOException
 import java.lang.Exception
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
+import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.httpPost
+import com.github.kittinunf.result.Result
+import java.io.File
 
 class FragmentBeranda : Fragment() {
     lateinit var textcariBeranda: EditText
@@ -261,23 +268,15 @@ class FragmentBeranda : Fragment() {
 
     // Fungsi untuk mengirim gambar ke server
     fun classifyImage(bitmap: Bitmap) {
-        val url = "/predict"
-        val byteArray = convertBitmapToByteArray(bitmap)
-        val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArray)
-//        val request = Request.Builder()
-//            .url(url)
-//            .post(requestBody)
-//            .build()
-//
-//        val client = OkHttpClient()
-//        client.newCall(request).enqueue(object : Callback {
-//            override fun onResponse(call: Call, response: Response) {
-//                Log.d("return", response.body().toString())
-//            }
-//
-//            override fun onFailure(call: Call, e: IOException) {
-//                Log.d("error", e.message.toString())
-//            }
-//        })
+        val file = File(requireContext().cacheDir, "temp_file.jpg") // Ganti ekstensi file sesuai format gambar yang Anda dapatkan
+        val outputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+        file.writeBytes(outputStream.toByteArray())
+
+        Fuel.upload("http://192.168.18.14:5001/predict", Method.POST)
+            .add(FileDataPart(file, name = "file"))
+            .response { result ->
+                Log.d("testT", result.toString())
+            }
     }
 }
