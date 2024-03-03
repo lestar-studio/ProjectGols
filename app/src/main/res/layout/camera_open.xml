@@ -1,28 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="150dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="16dp">
 
-    <ImageView
+    <ImageButton
         android:id="@+id/camera"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/gallery"
         android:src="@drawable/ic_baseline_photo_camera_24"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="Camera"
+        android:scaleType="fitCenter"
+        android:layout_marginEnd="10dp"
         tools:ignore="MissingConstraints" />
 
-    <ImageView
+    <ImageButton
         android:id="@+id/gallery"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_constraintLeft_toRightOf="@id/camera"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="10dp"
         android:src="@drawable/ic_gambar"
+        android:background="?attr/selectableItemBackground"
+        android:contentDescription="Gallery"
+        android:scaleType="fitCenter"
         tools:ignore="MissingConstraints" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

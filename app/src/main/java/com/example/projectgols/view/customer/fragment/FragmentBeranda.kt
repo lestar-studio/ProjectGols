@@ -30,10 +30,18 @@ import com.example.projectgols.view.customer.ActivityKeranjang
 import com.firebase.ui.database.FirebaseRecyclerAdapter
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.MediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
 import org.tensorflow.lite.DataType
 import org.tensorflow.lite.support.tensorbuffer.TensorBuffer
 import java.io.ByteArrayOutputStream
 import java.io.IOException
+import java.lang.Exception
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
@@ -200,7 +208,7 @@ class FragmentBeranda : Fragment() {
         super.onActivityResult(requestCode, resultCode, data)
     }
 
-    private fun classifyImage(image: Bitmap) {
+    private fun classifyImageOld(image: Bitmap) {
         try {
             val model: Model = Model.newInstance(requireContext().applicationContext)
 
@@ -239,5 +247,37 @@ class FragmentBeranda : Fragment() {
         } catch (e: IOException) {
             // TODO Handle the exception
         }
+    }
+
+    fun convertBitmapToByteArray(bitmap: Bitmap): ByteArray {
+        try {
+            val outputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+            return outputStream.toByteArray()
+        } catch (e: Exception) {
+            return ByteArray(1)
+        }
+    }
+
+    // Fungsi untuk mengirim gambar ke server
+    fun classifyImage(bitmap: Bitmap) {
+        val url = "/predict"
+        val byteArray = convertBitmapToByteArray(bitmap)
+        val requestBody = RequestBody.create(MediaType.parse("image/*"), byteArray)
+//        val request = Request.Builder()
+//            .url(url)
+//            .post(requestBody)
+//            .build()
+//
+//        val client = OkHttpClient()
+//        client.newCall(request).enqueue(object : Callback {
+//            override fun onResponse(call: Call, response: Response) {
+//                Log.d("return", response.body().toString())
+//            }
+//
+//            override fun onFailure(call: Call, e: IOException) {
+//                Log.d("error", e.message.toString())
+//            }
+//        })
     }
 }
