@@ -50,6 +50,7 @@ import java.nio.ByteOrder
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
+import org.json.JSONObject
 import java.io.File
 
 class FragmentBeranda : Fragment() {
@@ -96,26 +97,27 @@ class FragmentBeranda : Fragment() {
         tempImage = requireActivity().findViewById(R.id.tempImage)
 
         pictureBeranda.setOnClickListener {
-            var dialog: AlertDialog? = null
-            val builder = AlertDialog.Builder(context)
-            val views = layoutInflater.inflate(R.layout.camera_open, null)
-
-            val btn_camera = views.findViewById<ImageView>(R.id.camera)
-            val btn_gallery = views.findViewById<ImageView>(R.id.gallery)
-
-            btn_camera.setOnClickListener{
-                openCamera()
-                dialog?.dismiss()
-            }
-
-            btn_gallery.setOnClickListener{
-                openGallery()
-                dialog?.dismiss()
-            }
-
-            builder.setView(views)
-            dialog = builder.create()
-            dialog.show()
+            openGallery()
+//            var dialog: AlertDialog? = null
+//            val builder = AlertDialog.Builder(context)
+//            val views = layoutInflater.inflate(R.layout.camera_open, null)
+//
+//            val btn_camera = views.findViewById<ImageView>(R.id.camera)
+//            val btn_gallery = views.findViewById<ImageView>(R.id.gallery)
+//
+//            btn_camera.setOnClickListener{
+//                openCamera()
+//                dialog?.dismiss()
+//            }
+//
+//            btn_gallery.setOnClickListener{
+//                openGallery()
+//                dialog?.dismiss()
+//            }
+//
+//            builder.setView(views)
+//            dialog = builder.create()
+//            dialog.show()
         }
         keranjangBeranda.setOnClickListener {
             val intent = Intent(view.context, ActivityKeranjang::class.java)
@@ -276,7 +278,26 @@ class FragmentBeranda : Fragment() {
         Fuel.upload("http://192.168.18.14:5001/predict", Method.POST)
             .add(FileDataPart(file, name = "file"))
             .response { result ->
-                Log.d("testT", result.toString())
+                when (result) {
+                    is Result.Failure -> {
+                        val ex = result.getException()
+                        // Tangani kesalahan dengan sesuai
+                        Log.e("Error", ex.toString())
+                    }
+                    is Result.Success -> {
+                        val data = String(result.get(), Charsets.UTF_8)
+                        // Sekarang Anda dapat bekerja dengan data yang diterima
+                        Log.d("Response", data)
+
+                        // Parse JSON response
+                        val jsonResponse = JSONObject(data)
+                        val predictData = jsonResponse.getString("predicted_class")
+                        Log.d("Predict Data", predictData)
+                        textcariBeranda.setText(predictData)
+
+                        load(predictData, 1)
+                    }
+                }
             }
     }
 }

@@ -58,7 +58,7 @@ class ActivityEdit : AppCompatActivity() {
         tipeMenu = findViewById(R.id.tipeMenu)
         btnSimpan = findViewById(R.id.btnSimpan)
 
-        val tipe = arrayListOf<String>("Celana Formal", "Celana Panjang", "Celana Pendek", "Kaos", "Kemeja", "Sweater")
+        val tipe = arrayListOf<String>("Celana Formal", "Celana Panjang", "Celana Pendek", "Kaos", "Kemeja", "Sweater", "Kaos Atas", "Gaun", "Mantel", "Sandal", "Sneaker", "Tas", "Sepatu Boot")
         val adapterTipe = ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, tipe)
         tipeMenu.adapter = adapterTipe
 
@@ -80,6 +80,13 @@ class ActivityEdit : AppCompatActivity() {
                             "Kaos"-> type = 3
                             "Kemeja"-> type = 4
                             "Sweater"-> type = 5
+                            "Kaos Atas"-> type = 6
+                            "Gaun"-> type = 7
+                            "Mantel"-> type = 8
+                            "Sandal"-> type = 9
+                            "Sneaker"-> type = 10
+                            "Tas"-> type = 11
+                            "Sepatu Boot"-> type = 12
                         }
 
                         tipeMenu.setSelection(type)
