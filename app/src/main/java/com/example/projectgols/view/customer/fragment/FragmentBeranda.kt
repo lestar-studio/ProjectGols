@@ -275,7 +275,7 @@ class FragmentBeranda : Fragment() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         file.writeBytes(outputStream.toByteArray())
 
-        Fuel.upload("http://192.168.18.14:5001/predict", Method.POST)
+        Fuel.upload("http://192.168.55.196:5001/predict", Method.POST)
             .add(FileDataPart(file, name = "file"))
             .response { result ->
                 when (result) {
