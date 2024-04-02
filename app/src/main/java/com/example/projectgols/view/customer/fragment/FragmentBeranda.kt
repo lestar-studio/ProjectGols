@@ -50,6 +50,9 @@ import java.nio.ByteOrder
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 import org.json.JSONObject
 import java.io.File
 
@@ -69,6 +72,9 @@ class FragmentBeranda : Fragment() {
     lateinit var mRecyclerView: RecyclerView
     lateinit var dataBarang: ArrayList<Barang>
     lateinit var adapterBarang: ViewholderBeranda
+
+    lateinit var ip: String
+    lateinit var ip2: String
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_beranda, container, false)
@@ -95,6 +101,37 @@ class FragmentBeranda : Fragment() {
         pictureBeranda = requireActivity().findViewById(R.id.pictureBeranda)
         keranjangBeranda = requireActivity().findViewById(R.id.keranjangBeranda)
         tempImage = requireActivity().findViewById(R.id.tempImage)
+
+        val database = FirebaseDatabase.getInstance()
+        val myRef = database.getReference("setting").child("ip")
+
+        myRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val value = dataSnapshot.getValue(String::class.java)
+                println("Data dari Firebase: $value")
+
+                ip = value ?: ""
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Gagal mengambil data dari Firebase: ${error.message}")
+            }
+        })
+
+        val newRef = database.getReference("setting").child("ip2")
+
+        newRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                val value = dataSnapshot.getValue(String::class.java)
+                println("Data dari Firebase: $value")
+
+                ip2 = value ?: ""
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                println("Gagal mengambil data dari Firebase: ${error.message}")
+            }
+        })
 
         pictureBeranda.setOnClickListener {
             openGallery()
@@ -275,8 +312,8 @@ class FragmentBeranda : Fragment() {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
         file.writeBytes(outputStream.toByteArray())
 
-        Fuel.upload("http://192.168.55.196:5001/predict", Method.POST)
-            .add(FileDataPart(file, name = "file"))
+        Fuel.upload(ip + "/compare", Method.POST)
+            .add(FileDataPart(file, name = "img"))
             .response { result ->
                 when (result) {
                     is Result.Failure -> {
@@ -291,13 +328,47 @@ class FragmentBeranda : Fragment() {
 
                         // Parse JSON response
                         val jsonResponse = JSONObject(data)
-                        val predictData = jsonResponse.getString("predicted_class")
-                        Log.d("Predict Data", predictData)
-                        textcariBeranda.setText(predictData)
+                        val compareResult = jsonResponse.getString("result")
+                        Log.d("Compare Result", compareResult)
 
-                        load(predictData, 1)
+                        if (compareResult == "Tidak ada gambar yang sama.") {
+                            // Jika result /compare "Kosong" maka masuk ke /predict
+                            callPredictAPI(file)
+                        } else {
+                            val predictData = jsonResponse.getString("result")
+                            textcariBeranda.setText(predictData)
+                            load(predictData, 1)
+                        }
                     }
                 }
             }
     }
-}
+
+        fun callPredictAPI(file: File) {
+            Fuel.upload(ip + "/predict", Method.POST)
+                .add(FileDataPart(file, name = "file"))
+                .response { result ->
+                    when (result) {
+                        is Result.Failure -> {
+                            val ex = result.getException()
+                            // Tangani kesalahan dengan sesuai
+                            Log.e("Error", ex.toString())
+                        }
+                        is Result.Success -> {
+                            val data = String(result.get(), Charsets.UTF_8)
+                            // Sekarang Anda dapat bekerja dengan data yang diterima
+                            Log.d("Response", data)
+
+                            // Parse JSON response
+                            val jsonResponse = JSONObject(data)
+                            val predictData = jsonResponse.getString("predicted_class")
+                            Log.d("Predict Data", predictData)
+                            textcariBeranda.setText(predictData)
+
+                            load(predictData, 1)
+                        }
+                    }
+                }
+        }
+
+    }
